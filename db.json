@@ -1,0 +1,35 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Design homepage",
+      "description": "Include hero section",
+      "column": "review"
+    },
+    {
+      "id": 2,
+      "title": "Setup project",
+      "description": "Initialize Vite + TS",
+
+      "column": "in_progress"
+    },
+    {
+      "id": 3,
+      "title": "Create columns layout",
+      "description": "Create columns layout",
+      "column": "backlog"
+    },
+    {
+      "id": 4,
+      "title": "Create new repo and install dependencies",
+      "description": "Create new repo and install dependencies",
+      "column": "done"
+    },
+    {
+      "id": 5,
+      "title": "Dark mode support",
+      "description": "Add theme toggle and css variables switching",
+      "column": "backlog"
+    }
+  ]
+}
