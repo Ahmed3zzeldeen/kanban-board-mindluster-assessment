@@ -4,7 +4,7 @@ import SearchAppBar from "./components/SearchAppBar"
 import TaskListContainer from "./components/TaskListContainer"
 import TaskItem from "./components/TaskItem"
 import { Typography, CircularProgress, Alert } from "@mui/material";
-import { useTasks, useDeleteTask } from "./hook/tasks";
+import { useTasks, useUpdateTask, useDeleteTask } from "./hook/tasks";
 import DeleteConfirmationDialog from "./components/DeleteConfirmationDialog";
 import type { Task } from "./types";
 
@@ -13,12 +13,13 @@ function App() {
   const [taskToDelete, setTaskToDelete] = useState<number | null>(null);
 
   const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
+  const { mutate: updateTask } = useUpdateTask();
 
   const columns = [
-    { title: "Backlog",     key: "backlog",     color: "#1976d2", bg: "#e7f1ff" },
+    { title: "Backlog", key: "backlog", color: "#1976d2", bg: "#e7f1ff" },
     { title: "In Progress", key: "in_progress", color: "#ff9800", bg: "#fff3e0" },
-    { title: "Review",      key: "review",      color: "#4c4eaf", bg: "#f3e8ff" },
-    { title: "Done",        key: "done",        color: "#4caf50", bg: "#e8f5e9" },
+    { title: "Review", key: "review", color: "#4c4eaf", bg: "#f3e8ff" },
+    { title: "Done", key: "done", color: "#4caf50", bg: "#e8f5e9" },
   ] as const;
 
   const tasksQuery = useTasks();
@@ -29,8 +30,23 @@ function App() {
   };
 
   const handleSaveClick = (id: number, updatedTask: Omit<Task, "id">) => {
-    // TODO: Implement task update logic here
-    console.log("Saving task with ID:", id, "Updated data:", updatedTask);
+    updateTask(
+      {
+        id,
+        title: updatedTask.title,
+        description: updatedTask.description,
+        priority: updatedTask.priority,
+        column: updatedTask.column,
+      },
+      {
+        onSuccess: () => {
+          console.log("Task updated successfully");
+        },
+        onError: () => {
+          console.error("Failed to update task");
+        }
+      }
+    );
   };
 
   const confirmDelete = () => {
