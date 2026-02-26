@@ -4,16 +4,20 @@ import SearchAppBar from "./components/SearchAppBar"
 import TaskListContainer from "./components/TaskListContainer"
 import TaskItem from "./components/TaskItem"
 import { Typography, CircularProgress, Alert } from "@mui/material";
-import { useTasks, useUpdateTask, useDeleteTask } from "./hook/tasks";
+import { useCreateTask, useTasks, useUpdateTask, useDeleteTask } from "./hook/tasks";
 import DeleteConfirmationDialog from "./components/DeleteConfirmationDialog";
-import type { Task } from "./types";
+import type { Column, Task } from "./types";
+import AddTaskDialog from "./components/AddTaskDialog";
 
 function App() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<number | null>(null);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [addColumn, setAddColumn] = useState<Column>("backlog");
 
   const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
   const { mutate: updateTask } = useUpdateTask();
+  const { mutate: createTask } = useCreateTask();
 
   const columns = [
     { title: "Backlog", key: "backlog", color: "#1976d2", bg: "#e7f1ff" },
@@ -59,6 +63,14 @@ function App() {
     });
   };
 
+  const handleAddTask = (newTask: Omit<Task, "id">) => {
+    createTask(newTask, {
+      onSuccess: () => {
+        setAddDialogOpen(false);
+      }
+    });
+  };
+
   return (
     <>
       <SearchAppBar />
@@ -74,6 +86,11 @@ function App() {
               taskCount={columnTasks.length}
               pointColor={col.color}
               countColor={{ bgColor: col.bg, color: '#222' }}
+              columnKey={col.key}
+              onAddClick={(colKey: Column) => {
+                setAddColumn(colKey);
+                setAddDialogOpen(true);
+              }}
             >
               {tasksQuery.isLoading ? (
                 <CircularProgress size={28} sx={{ m: 'auto', display: 'block' }} />
@@ -103,6 +120,12 @@ function App() {
         loading={isDeleting}
         onClose={() => setDeleteDialogOpen(false)}
         onConfirm={confirmDelete}
+      />
+      <AddTaskDialog
+        open={addDialogOpen}
+        onClose={() => setAddDialogOpen(false)}
+        onSave={handleAddTask}
+        columnKey={addColumn}
       />
     </>
   );
