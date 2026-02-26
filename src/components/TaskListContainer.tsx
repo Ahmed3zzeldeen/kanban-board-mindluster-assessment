@@ -1,6 +1,8 @@
 import Grid from "@mui/material/Grid"
 import CircleRoundedIcon from '@mui/icons-material/CircleRounded';
-import { Box, Typography } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
+import AddIcon from '@mui/icons-material/Add';
+import type { Column } from "../types";
 
 interface TaskListContinerProps {
   title?: string;
@@ -10,11 +12,13 @@ interface TaskListContinerProps {
     bgColor: string;
     color: string;
   },
+  columnKey: Column;
+  onAddClick?: (columnKey: Column) => void;
   children?: React.ReactNode;
 }
 
 
-export default function TaskListContiner({ title, taskCount, pointColor, countColor, children }: TaskListContinerProps) {
+export default function TaskListContiner({ title, taskCount, pointColor, countColor, columnKey, onAddClick, children }: TaskListContinerProps) {
 
   return (
     <Grid size={{ xs: 12, md: 3 }} sx={{ backgroundColor: '#eaf0f0', padding: '16px', borderRadius: '8px' }}>
@@ -28,6 +32,10 @@ export default function TaskListContiner({ title, taskCount, pointColor, countCo
         </Box>
       </Box>
       {children}
+      <Button variant="outlined" fullWidth sx={{ marginTop: '16px' }} onClick={() => onAddClick?.(columnKey)}>
+        <AddIcon sx={{ marginRight: '8px' }} />
+        Add Task
+      </Button>
     </Grid>
   )
 }
