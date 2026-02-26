@@ -2,17 +2,15 @@ import { Box, Button, Chip, IconButton, MenuItem, Select, TextField, Typography 
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { useState } from 'react';
+import type { Task } from '../types';
 
-interface TaskItemProps {
-  title?: string;
-  description?: string;
-  priority?: 'Low' | 'Medium' | 'High';
-  column?: string;
-  onDelete?: () => void;
+interface TaskItemProps extends Task {
+  onDelete: () => void;
+  onSave?: (updatedTask: Task) => void;
 }
 
 
-export default function TaskItem({ title, description, priority, column, onDelete }: TaskItemProps) {
+export default function TaskItem({ id, title, description, priority, column, onDelete, onSave }: TaskItemProps) {
   const [taskTitle, setTaskTitle] = useState(title || "Task Title Placeholder");
   const [taskDescription, setTaskDescription] = useState(description || "Task description placeholder. This is where the details of the task will be displayed.");
   const [taskPriority, setTaskPriority] = useState(priority || "High");
@@ -28,6 +26,15 @@ export default function TaskItem({ title, description, priority, column, onDelet
 
   const handleSaveClick = () => {
     setMode('view');
+    if (onSave) {
+      onSave({
+        id: id,
+        title: taskTitle,
+        description: taskDescription,
+        column: taskStatus,
+        priority: taskPriority
+      } as Task);
+    }
   }
 
   const handleDeleteClick = () => {
