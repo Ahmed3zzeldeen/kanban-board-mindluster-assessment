@@ -1,16 +1,119 @@
-import { Box, Chip, Typography } from '@mui/material'
+import { Box, Button, Chip, IconButton, MenuItem, Select, TextField, Typography } from '@mui/material'
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { useState } from 'react';
+
+interface TaskItemProps {
+  title?: string;
+  description?: string;
+  priority?: 'Low' | 'Medium' | 'High';
+  column?: string;
+  onDelete?: () => void;
+}
 
 
-export default function TaskItem() {
+export default function TaskItem({ title, description, priority, column, onDelete }: TaskItemProps) {
+  const [taskTitle, setTaskTitle] = useState(title || "Task Title Placeholder");
+  const [taskDescription, setTaskDescription] = useState(description || "Task description placeholder. This is where the details of the task will be displayed.");
+  const [taskPriority, setTaskPriority] = useState(priority || "High");
+  const [taskStatus, setTaskStatus] = useState(column || "backlog");
+
+  const [mode, setMode] = useState<'view' | 'edit'>('view');
+  const priorityColor = taskPriority === 'High' ? 'error' : taskPriority === 'Medium' ? 'warning' : 'success';
+  const priorityText = taskPriority || "High";
+
+  const handleEditClick = () => {
+    setMode('edit');
+  }
+
+  const handleSaveClick = () => {
+    setMode('view');
+  }
+
+  const handleDeleteClick = () => {
+    if (onDelete) {
+      onDelete();
+    }
+  }
+
   return (
     <Box sx={{ backgroundColor: '#fff', padding: '12px', borderRadius: '4px', marginBottom: '8px', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
-      <Typography variant="body1" sx={{ color: '#555', fontWeight: 'bold' }}>
-        Task 1: Design the UI
-      </Typography>
-      <Typography variant="body2" sx={{ color: '#777' }}>
-        Create wireframes and mockups for the new project.
-      </Typography>
-      <Chip variant="outlined" label="High" color="error" size="small" sx={{ marginTop: '8px', borderRadius: '8px', backgroundColor: '#ffebee' }} />
+      {mode === 'view' ? (
+        <>
+          <Typography variant="body1" sx={{ color: '#555', fontWeight: 'bold' }}>
+            {taskTitle}
+          </Typography>
+
+          <Typography variant="body2" sx={{ color: '#777' }}>
+            {taskDescription}
+          </Typography>
+        </>
+
+      ) : (
+        <>
+          <TextField fullWidth label="Task Title" variant="outlined" size="small" value={taskTitle} onChange={(e) => setTaskTitle(e.target.value)} sx={{ marginBottom: '8px' }} />
+          <TextField fullWidth label="Task Description" variant="outlined" size="small" multiline rows={3} value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)} sx={{ marginBottom: '8px' }} />
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            gap: '8px'
+          }}>
+            <Select
+              labelId="priority-select-label"
+              variant='standard'
+              id="priority-select"
+              value={taskPriority}
+              label="Priority"
+              onChange={(e) => setTaskPriority(e.target.value as 'Low' | 'Medium' | 'High')}
+              size="small"
+            >
+              <MenuItem value="Low">Low</MenuItem>
+              <MenuItem value="Medium">Medium</MenuItem>
+              <MenuItem value="High">High</MenuItem>
+            </Select>
+            <Select
+              labelId="status-select-label"
+              id="status-select"
+              value={taskStatus}
+              label="Status"
+              onChange={(e) => setTaskStatus(e.target.value)}
+              size="small"
+            >
+              <MenuItem value="backlog">Backlog</MenuItem>
+              <MenuItem value="in_progress">In Progress</MenuItem>
+              <MenuItem value="review">In Review</MenuItem>
+              <MenuItem value="done">Done</MenuItem>
+            </Select>
+          </Box>
+        </>
+      )}
+
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
+        <Chip variant="outlined" label={priorityText} color={priorityColor} size="small" sx={{ marginTop: '8px', borderRadius: '8px', backgroundColor: priorityColor === 'error' ? '#ffebee' : priorityColor === 'warning' ? '#fff3e0' : '#e8f5e9' }} />
+        <Box sx={{ display: 'flex', gap: '8px' }}>
+          {
+            mode === 'edit' ? (
+              <>
+                <Button variant="contained" size="small" color="primary" onClick={handleSaveClick}>
+                  Save
+                </Button>
+                <IconButton size="small" sx={{ color: '#d32f2f' }} onClick={handleDeleteClick}>
+                  <DeleteOutlineOutlinedIcon fontSize="small" />
+                </IconButton>
+              </>
+            ) : (
+              <>
+                <IconButton size="small" sx={{ color: '#1976d2' }} onClick={handleEditClick}>
+                  <EditNoteOutlinedIcon fontSize="small" />
+                </IconButton>
+                <IconButton size="small" sx={{ color: '#d32f2f' }} onClick={handleDeleteClick}>
+                  <DeleteOutlineOutlinedIcon fontSize="small" />
+                </IconButton>
+              </>
+            )
+          }
+        </Box>
+      </Box>
     </Box>
   )
 }
