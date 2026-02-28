@@ -7,6 +7,8 @@ Implements 4 columns (Backlog, In Progress, Review, Done) with full **CRUD**, **
 Live Demo: [https://kanban-board-mindluster-assessment.vercel.app](https://kanban-board-mindluster-assessment.vercel.app)  
 (Backend mock API hosted separately on Vercel) via [json-server-template](https://github.com/Ahmed3zzeldeen/kanban-board-mindluster-assessment-server) but it's not fully functional due to Vercel's limitations on long-running processes. For local testing, run json-server locally as described below.
 
+![Kanban Board](screenshots/full-board.gif)
+
 ## Features Implemented
 - 4-column Kanban layout (Backlog, In Progress, Review, Done)
 - Create, Read, Update, Delete (CRUD) tasks
@@ -77,4 +79,30 @@ npm run dev
 # Runs on http://localhost:5173 (or similar)
 ```
 Open [http://localhost:5173](http://localhost:5173) in your browser and start using the Kanban board!
+
+## Deployment on Vercel
+* **Frontend** is deployed to Vercel with production API base URL set via environment variable.
+* **Backend (json-server)** is deployed separately as a serverless function using [this template](https://github.com/kitloong/json-server-vercel) but is not fully functional due to Vercel's limitations on long-running processes. For a fully functional backend, consider deploying json-server on a platform that supports persistent processes (e.g., Heroku, Railway) and update the `VITE_API_URL` accordingly.
+
+### To link your deployed frontend to your backend API, follow these steps:
+1. copy `.env.example` to `.env` and update the API URL:
+2. set the `VITE_API_URL` to your deployed json-server URL like:
+
+```env
+VITE_API_URL=https://your-json-server-name.vercel.app
+```
+
+## Screenshots 📸
+### 1. Full board view     
+![Full Kanban Board](screenshots/full-board.gif)
+
+### 2. Inline editing + priority/status change  
+![Inline Edit](screenshots/inline-edit.gif)
+
+### 3. Search + filtered results  
+
+![Search Filter](screenshots/search.gif)
+
+### 4. Drag & drop in action  
+![Drag & Drop](screenshots/dnd.gif)
 
