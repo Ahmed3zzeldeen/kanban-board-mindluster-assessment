@@ -1,73 +1,80 @@
-# React + TypeScript + Vite
+# Kanban ToDo Board – Frontend Developer Assessment
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern **Kanban-style ToDo list dashboard** built for the Frontend Developer Assessment.
 
-Currently, two official plugins are available:
+Implements 4 columns (Backlog, In Progress, Review, Done) with full **CRUD**, **search with debounce**, **drag & drop**, and **React Query caching**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Live Demo: [https://kanban-board-mindluster-assessment.vercel.app](https://kanban-board-mindluster-assessment.vercel.app)  
+(Backend mock API hosted separately on Vercel) via [json-server-template](https://github.com/Ahmed3zzeldeen/kanban-board-mindluster-assessment-server) but it's not fully functional due to Vercel's limitations on long-running processes. For local testing, run json-server locally as described below.
 
-## React Compiler
+## Features Implemented
+- 4-column Kanban layout (Backlog, In Progress, Review, Done)
+- Create, Read, Update, Delete (CRUD) tasks
+- Inline editing of tasks (title, description, priority, status)
+- Global search by title or description (with 600ms debounce)
+- Drag & drop tasks between columns using `@dnd-kit` (optimistic updates + real PATCH)
+- Loading states, error handling, delete confirmation dialog
+- Responsive design with Material UI (MUI)
+- TypeScript + React Query for data fetching & caching
+- Mock REST API using json-server
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
+- **Frontend**: React 19 (Vite + TypeScript)
+- **UI Library**: Material UI (MUI) + MUI Icons
+- **State & Data Fetching**: TanStack React Query v5
+- **Drag & Drop**: @dnd-kit/core + @dnd-kit/sortable
+- **HTTP Client**: Axios
+- **Mock Backend**: json-server (deployed to Vercel as serverless function)
+- **Deployment**: Vercel (frontend + mock API)
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project Structure
+```
+src/
+├── components/           # Reusable UI components
+│   ├── AddTaskDialog.tsx
+│   ├── DeleteConfirmationDialog.tsx
+│   ├── SearchAppBar.tsx
+│   ├── TaskItem.tsx
+│   └── TaskListContainer.tsx
+├── hook/                 # React Query custom hooks
+│   └── tasks.ts
+├── lib/                  # Utilities
+│   ├── api.ts
+│   └── http.ts
+├── types/                # TypeScript interfaces
+│   └── index.ts
+├── App.tsx
+├── main.tsx
+└── global.css
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## How to Run Locally
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
+- Node.js ≥ 18
+- npm / pnpm / yarn
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clone the repository
+```bash
+git clone https://github.com/Ahmed3zzeldeen/kanban-board-mindluster-assessment.git
+cd kanban-board-mindluster-assessment
 ```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Start json-server (mock API)
+```bash
+npm run server
+# Runs on http://localhost:4000
+```
+
+### 4. Start frontend dev server
+```bash
+npm run dev
+# Runs on http://localhost:5173 (or similar)
+```
+Open [http://localhost:5173](http://localhost:5173) in your browser and start using the Kanban board!
+
