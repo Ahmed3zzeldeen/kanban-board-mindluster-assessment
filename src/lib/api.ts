@@ -4,7 +4,7 @@ import type { Task, TaskCreate, TaskSearchParams, TaskUpdate } from "../types/in
 const TASKS = "/tasks";
 
 export const taskApi = {
-  getAll: (params?: Record<string, TaskSearchParams>) =>
+  getAll: (params?: TaskSearchParams) =>
     http.get<Task[]>(TASKS, { params }).then(r => r.data),
 
   getById: (id: number) =>
