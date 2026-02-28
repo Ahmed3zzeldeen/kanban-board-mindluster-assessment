@@ -4,32 +4,49 @@
       "id": 1,
       "title": "Design homepage",
       "description": "Include hero section",
-      "column": "review"
+      "column": "backlog",
+      "priority": "High"
     },
     {
       "id": 2,
       "title": "Setup project",
       "description": "Initialize Vite + TS",
-
-      "column": "in_progress"
+      "column": "backlog",
+      "priority": "High"
     },
     {
       "id": 3,
       "title": "Create columns layout",
       "description": "Create columns layout",
-      "column": "backlog"
+      "column": "in_progress",
+      "priority": "High"
     },
     {
       "id": 4,
       "title": "Create new repo and install dependencies",
       "description": "Create new repo and install dependencies",
-      "column": "done"
+      "column": "review"
     },
     {
       "id": 5,
       "title": "Dark mode support",
       "description": "Add theme toggle and css variables switching",
-      "column": "backlog"
+      "column": "review",
+      "priority": "High"
+    },
+    {
+      "title": "sss",
+      "description": "Task description placeholder. This is where the details of the task will be displayed.",
+      "priority": "Low",
+      "column": "done",
+      "id": 6
+    },
+    {
+      "title": "dssad",
+      "description": "sdadsas",
+      "priority": "Low",
+      "column": "done",
+      "id": 8
     }
   ]
 }

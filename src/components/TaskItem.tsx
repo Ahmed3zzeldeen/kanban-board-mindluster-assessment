@@ -2,11 +2,18 @@ import { Box, Button, Chip, IconButton, MenuItem, Select, TextField, Typography 
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { useState } from 'react';
-import type { Task } from '../types';
+import type { Task, Column } from '../types';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
-interface TaskItemProps extends Task {
+interface TaskItemProps {
+  id: string;
+  title: string;
+  description: string;
+  priority?: "Low" | "Medium" | "High";
+  column: Column;
   onDelete: () => void;
-  onSave?: (updatedTask: Task) => void;
+  onSave?: (updatedTask: Omit<Task, "id">) => void;
 }
 
 
@@ -20,6 +27,27 @@ export default function TaskItem({ id, title, description, priority, column, onD
   const priorityColor = taskPriority === 'High' ? 'error' : taskPriority === 'Medium' ? 'warning' : 'success';
   const priorityText = taskPriority || "High";
 
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id,
+    data: {
+      type: 'item',
+      column,
+    },
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.6 : 1,
+  };
+
   const handleEditClick = () => {
     setMode('edit');
   }
@@ -28,12 +56,11 @@ export default function TaskItem({ id, title, description, priority, column, onD
     setMode('view');
     if (onSave) {
       onSave({
-        id: id,
         title: taskTitle,
         description: taskDescription,
         column: taskStatus,
         priority: taskPriority
-      } as Task);
+      });
     }
   }
 
@@ -44,7 +71,13 @@ export default function TaskItem({ id, title, description, priority, column, onD
   }
 
   return (
-    <Box sx={{ backgroundColor: '#fff', padding: '12px', borderRadius: '4px', marginBottom: '8px', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+    <Box 
+      ref={setNodeRef} 
+      style={style} 
+      {...attributes} 
+      {...listeners}
+      sx={{ backgroundColor: '#fff', padding: '12px', borderRadius: '4px', marginBottom: '8px', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)', cursor: 'grab' }}
+    >
       {mode === 'view' ? (
         <>
           <Typography variant="body1" sx={{ color: '#555', fontWeight: 'bold' }}>

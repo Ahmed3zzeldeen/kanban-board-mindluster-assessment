@@ -6,6 +6,9 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
+import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -38,6 +41,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    paddingRight: theme.spacing(4),
     transition: theme.transitions.create('width'),
     [theme.breakpoints.up('sm')]: {
       width: '18ch',
@@ -48,7 +52,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchAppBar() {
+interface SearchAppBarProps {
+  search?: string;
+  onSearchChange?: (value: string) => void;
+  totalTasks?: number;
+  isLoading?: boolean;
+}
+
+export default function SearchAppBar({ search = '', onSearchChange, totalTasks = 0, isLoading = false }: SearchAppBarProps) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -75,7 +86,7 @@ export default function SearchAppBar() {
               component="div"
               color="textSecondary"
             >
-              10 tasks
+              {totalTasks} tasks
             </Typography>
           </Box>
           <Search>
@@ -85,7 +96,23 @@ export default function SearchAppBar() {
             <StyledInputBase
               placeholder="Search tasks…"
               inputProps={{ 'aria-label': 'search' }}
+              value={search}
+              onChange={(e) => onSearchChange?.(e.target.value)}
             />
+            {isLoading && (
+              <Box sx={{ position: 'absolute', right: 40, top: '50%', transform: 'translateY(-50%)' }}>
+                <CircularProgress size={16} sx={{ color: 'gray' }} />
+              </Box>
+            )}
+            {search && !isLoading && (
+              <IconButton
+                size="small"
+                onClick={() => onSearchChange?.('')}
+                sx={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)' }}
+              >
+                <ClearIcon sx={{ fontSize: 18 }} />
+              </IconButton>
+            )}
           </Search>
         </Toolbar>
       </AppBar>
